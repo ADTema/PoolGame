@@ -1,4 +1,4 @@
-# Pong
+# PoolGame
 
 ----
 
