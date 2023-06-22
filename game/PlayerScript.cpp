@@ -1,11 +1,15 @@
 #include "PlayerScript.h"
 
-#include "../headers/GameObject.h"
-#include "SFML/Graphics.hpp"
-#include "../headers/Log.h"
 #include "../headers/Context.h"
+#include "../headers/GameObject.h"
+#include "../headers/Log.h"
+#include "SFML/Graphics.hpp"
+#include "glm/gtx/compatibility.hpp"
 
 void PlayerScript::start() {
+
+    position = gameObject->getPosition();
+
     LOG_INFO("Player created");
     sf::RectangleShape rectangle(sf::Vector2f(256, 256));
     sf::RenderTexture texture;
@@ -22,31 +26,28 @@ void PlayerScript::start() {
 }
 void PlayerScript::update() {}
 void PlayerScript::fixedUpdate() {
-    float moveSpeed = 5.0f;
+    float moveSpeed = 10.0f;
+    float smooth = 0.05f;
+    glm::vec3 oldPosition = gameObject->getPosition();
 
     auto context = this->gameObject->getContext();
 
-
         if (context->isKeyPressed(sf::Keyboard::Left))
         {
-            glm::vec3 position = gameObject->getPosition();
-            gameObject->setPosition(position + glm::vec3(-moveSpeed, 0.0f, 0.0f));
+            position = position + glm::vec3(-moveSpeed, 0.0f, 0.0f);
         }
         if (context->isKeyPressed(sf::Keyboard::Right))
         {
-            glm::vec3 position = gameObject->getPosition();
-            gameObject->setPosition(position + glm::vec3(moveSpeed, 0.0f, 0.0f));
+            position = position + glm::vec3(moveSpeed, 0.0f, 0.0f);
         }
         if (context->isKeyPressed(sf::Keyboard::Up))
         {
-            glm::vec3 position = gameObject->getPosition();
-            gameObject->setPosition(position + glm::vec3(0.0f, moveSpeed, 0.0f));
+            position = position + glm::vec3(0.0f, moveSpeed, 0.0f);
         }
         if (context->isKeyPressed(sf::Keyboard::Down))
         {
-            glm::vec3 position = gameObject->getPosition();
-            gameObject->setPosition(position + glm::vec3(0.0f, -moveSpeed, 0.0f));
+            position = position + glm::vec3(0.0f, -moveSpeed, 0.0f);
         }
-
-
+        oldPosition = glm::lerp(oldPosition, position, smooth);
+        gameObject->setPosition(oldPosition);
 }
