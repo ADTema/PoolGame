@@ -87,13 +87,20 @@ void Window::renderObject(GameObject *gameObject) {
     }
 
     std::unique_lock<std::mutex> lock(m_pWindow_mutex);
-
-    m_pWindow->draw(sprite, glmMat4ToSfTransform(m_viewMatrix *
-                                                 gameObject->getTransform()));
+    auto gm_t = gameObject->getTransform();
+    gm_t[3][1] = -gm_t[3][1];
+    m_pWindow->draw(sprite, glmMat4ToSfTransform(m_viewMatrix * gm_t));
 }
 void Window::setCurrentScene(Scene *scene) { m_pCurrentScene = scene; }
 void Window::on_updateScene() { m_pCurrentScene->on_update(); }
 void Window::on_updateEvents() {
     std::unique_lock<std::mutex> lock(m_pWindow_mutex);
     m_pWindow->pollEvent(m_gameContext->getEvent());
+    auto event = m_gameContext->getEvent();
+    if(event.type == sf::Event::KeyPressed){
+        m_gameContext->setKeyPressed(event.key.code);
+    }
+    if(event.type == sf::Event::KeyReleased){
+        m_gameContext->setKeyReleased(event.key.code);
+    }
 }

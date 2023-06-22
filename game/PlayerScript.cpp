@@ -3,6 +3,7 @@
 #include "../headers/GameObject.h"
 #include "SFML/Graphics.hpp"
 #include "../headers/Log.h"
+#include "../headers/Context.h"
 
 void PlayerScript::start() {
     LOG_INFO("Player created");
@@ -23,22 +24,29 @@ void PlayerScript::update() {}
 void PlayerScript::fixedUpdate() {
     float moveSpeed = 5.0f;
 
-    glm::vec3 position = gameObject->getPosition();
+    auto context = this->gameObject->getContext();
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-    {
-        gameObject->setPosition(position + glm::vec3(-moveSpeed, 0.0f, 0.0f));
-    }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-    {
-         gameObject->setPosition(position + glm::vec3(moveSpeed, 0.0f, 0.0f));
-    }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-    {
-          gameObject->setPosition(position + glm::vec3(0.0f, moveSpeed, 0.0f));
-    }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-    {
-          gameObject->setPosition(position + glm::vec3(0.0f, -moveSpeed, 0.0f));
-    }
+
+        if (context->isKeyPressed(sf::Keyboard::Left))
+        {
+            glm::vec3 position = gameObject->getPosition();
+            gameObject->setPosition(position + glm::vec3(-moveSpeed, 0.0f, 0.0f));
+        }
+        if (context->isKeyPressed(sf::Keyboard::Right))
+        {
+            glm::vec3 position = gameObject->getPosition();
+            gameObject->setPosition(position + glm::vec3(moveSpeed, 0.0f, 0.0f));
+        }
+        if (context->isKeyPressed(sf::Keyboard::Up))
+        {
+            glm::vec3 position = gameObject->getPosition();
+            gameObject->setPosition(position + glm::vec3(0.0f, moveSpeed, 0.0f));
+        }
+        if (context->isKeyPressed(sf::Keyboard::Down))
+        {
+            glm::vec3 position = gameObject->getPosition();
+            gameObject->setPosition(position + glm::vec3(0.0f, -moveSpeed, 0.0f));
+        }
+
+
 }
