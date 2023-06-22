@@ -3,10 +3,12 @@
 #include <SFML/Graphics.hpp>
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/glm.hpp>
-
-#include "../headers/Log.h"
 #include "glm/gtx/euler_angles.hpp"
 #include "glm/gtx/matrix_decompose.hpp"
+
+#include "../headers/Component.h"
+#include "../headers/Log.h"
+#include "../headers/Context.h"
 
 sf::Texture *GameObject::getTexture() { return m_texture; }
 
@@ -15,16 +17,50 @@ glm::mat4 GameObject::getTransform() {
     return m_transform;
 }
 
-void GameObject::start() {}
+void GameObject::start() {
+    std::unique_lock<std::mutex> lock(m_components_mutex);
+    std::for_each(m_components.begin(), m_components.end(), [](Component *component){
+       component->start();
+    });
+}
 
-void GameObject::update() {}
+void GameObject::update() {
+    std::unique_lock<std::mutex> lock(m_components_mutex);
+    std::for_each(m_components.begin(), m_components.end(), [](Component *component){
+        component->update();
+    });
+}
 
-void GameObject::fixedUpdate() {}
+void GameObject::fixedUpdate() {
+    std::unique_lock<std::mutex> lock(m_components_mutex);
+    std::for_each(m_components.begin(), m_components.end(), [](Component *component){
+        component->fixedUpdate();
+    });
+}
 
 void GameObject::setTexture(sf::Texture *texture) {
     std::unique_lock<std::mutex> lock(m_texture_mutex);
     m_texture = texture;
 }
+
+Context *GameObject::getContext() {
+    return m_pScene->getContext();
+}
+
+void GameObject::destroy() {
+    {
+        std::unique_lock<std::mutex> lock(m_components_mutex);
+        m_components.clear();
+    }
+    m_pScene->destroyGameObject(this);
+}
+
+void GameObject::addComponent(Component *component) {
+    std::unique_lock<std::mutex> lock(m_components_mutex);
+    component->gameObject = this;
+    m_components.push_back(component);
+}
+
 void GameObject::setTexture(std::string filename) {
     auto *texture = new sf::Texture();
     if (texture->loadFromFile(filename)) {

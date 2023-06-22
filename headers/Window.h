@@ -7,6 +7,7 @@
 #include <string>
 
 #include "Context.h"
+#include "Game.h"
 
 namespace sf {
     struct RenderWindow;
@@ -18,7 +19,7 @@ class Scene;
 
 class Window{
    public:
-    Window(std::string title, unsigned int width, unsigned int height, Context &context);
+    Window(std::string title, unsigned int width, unsigned int height, Context *context);
     ~Window();
 
     Window(const Window&) = delete;
@@ -46,7 +47,9 @@ class Window{
     int init();
     void renderObject(GameObject *gameObject);
 
+    void on_updateEvents();
 
+    friend void Game::on_eventsUpdate();
 
     sf::RenderWindow* m_pWindow = nullptr;
     std::mutex m_pWindow_mutex;
@@ -57,7 +60,7 @@ class Window{
 
     WindowData m_data;
 
-    Context &m_gameContext;
+    Context *m_gameContext;
 };
 
 #endif  // PONG_WINDOW_H

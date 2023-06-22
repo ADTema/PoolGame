@@ -2,6 +2,11 @@
 
 #include <algorithm>
 
+#include "../game/ExitGameScript.h"
+#include "../game/PlayerScript.h"
+#include "../headers/Camera.h"
+#include "../headers/Context.h"
+#include "../headers/GameObject.h"
 #include "SFML/Graphics/CircleShape.hpp"
 #include "SFML/Graphics/RenderTexture.hpp"
 
@@ -16,34 +21,19 @@ std::list<GameObject *>::iterator Scene::getGameObjectEndIterator() {
 void Scene::addObject(GameObject *gameObject) {
     std::unique_lock<std::mutex> lock(m_gameObjects_mutex);
     m_gameObjects.push_back(gameObject);
+    gameObject->m_pScene = this;
     gameObject->start();
 }
-Scene::Scene(float width, float height, Context &context)
+
+Scene::Scene(float width, float height, Context *context)
     : m_gameContext(context) {
     m_pCamera = new Camera(width, height);
+    m_pCamera->addComponent(new ExitGameScript());
     addObject(m_pCamera);
-    auto obj = new GameObject();
 
-    /*auto texture = sf::RenderTexture();
-    texture.create(sf::Vector2u(30, 30)); // размер текстуры
-
-    // Создаем круг на текстуре
-    sf::CircleShape circle(15.f);
-    circle.setFillColor(sf::Color::Red);
-    circle.setPosition(sf::Vector2f(0.f, 0.f));
-
-    // Рисуем круг на текстуре
-    texture.clear(sf::Color::Transparent);
-    texture.draw(circle);
-    texture.display();
-    auto *tex = new sf::Texture();
-    tex->create(sf::Vector2u(30, 30));
-    tex->update(texture.getTexture());*/
-
-    obj->setTexture("/media/sireth/F0CE491ACE48DA8C/Projects/CppProjects/Pong/cmake-build-debug/img.png");
-    obj->setScale({0.1,0.1,0.1});
-    obj->setPosition({0, 0,10});
-    addObject(obj);
+    auto gm = new GameObject();
+    gm->addComponent(new PlayerScript());
+    addObject(gm);
 }
 Camera *Scene::getCamera() {
     return m_pCamera;
@@ -54,3 +44,12 @@ void Scene::on_update() {
         gameObject->fixedUpdate();
     });
 }
+void Scene::destroyGameObject(GameObject *gameObject) {
+    std::unique_lock<std::mutex> lock(m_gameObjects_mutex);
+    auto searched = std::find(m_gameObjects.begin(), m_gameObjects.end(), gameObject);
+    if(*searched){
+        m_gameObjects.erase(searched);
+    }
+    delete gameObject;
+}
+Context *Scene::getContext() { return m_gameContext; }

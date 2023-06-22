@@ -2,12 +2,17 @@
 #define PONG_CONTEXT_H
 
 #pragma once
+#include <chrono>
 #include <glm/glm.hpp>
 #include <string>
 
+#include "Game.h"
 #include "SFML/Window/Event.hpp"
 
 class Context {
+
+    friend int Game::start();
+
    private:
     struct WindowData
     {
@@ -17,9 +22,11 @@ class Context {
     };
 
     WindowData m_mainWidowData;
-    bool m_running = false;
+    long deltaTime;
 
     sf::Event m_event{};
+
+    bool m_running = false;
 
    public:
 
@@ -27,11 +34,13 @@ class Context {
 
     WindowData getWindowData(){return m_mainWidowData;};
 
+    void stopGame();
+
     void setWindowsData(WindowData win_data);
 
     [[nodiscard]] bool getRunning() const{return m_running;};
 
-    sf::Event getEvent() {return m_event;};
+    sf::Event &getEvent() {return m_event;};
 
 };
 

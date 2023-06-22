@@ -4,14 +4,15 @@
 #pragma once
 
 #include <list>
+#include <mutex>
 
-#include "Camera.h"
-#include "Context.h"
-#include "GameObject.h"
+class Context;
+class Camera;
+class GameObject;
 
 class Scene {
    public:
-    Scene(float width, float height, Context &context);
+    Scene(float width, float height, Context *context);
 
     std::list<GameObject *>::iterator getGameObjectBeginIterator();
     std::list<GameObject *>::iterator getGameObjectEndIterator();
@@ -21,13 +22,16 @@ class Scene {
 
     void on_update();
 
+    Context *getContext();
+
+    void destroyGameObject(GameObject *gameObject);
 
    private:
     std::mutex m_gameObjects_mutex;
     std::list<GameObject *> m_gameObjects;
     Camera *m_pCamera;
 
-    Context &m_gameContext;
+    Context *m_gameContext;
 };
 
 #endif  // PONG_SCENE_H

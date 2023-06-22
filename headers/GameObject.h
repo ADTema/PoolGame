@@ -3,13 +3,14 @@
 
 #pragma once
 
-#include "Component.h"
-
 #include <list>
 #include <mutex>
 
+#include "Scene.h"
 #include "glm/glm.hpp"
 
+class Context;
+class Component;
 
 namespace sf {
 struct Texture;
@@ -17,6 +18,9 @@ struct Texture;
 
 
 class GameObject {
+
+    friend void Scene::addObject(GameObject *gameObject);
+
    protected:
     glm::mat4 m_transform{1};
     glm::vec3 m_position{0};
@@ -28,9 +32,19 @@ class GameObject {
     sf::Texture *m_texture;
     std::mutex m_texture_mutex;
 
-    std::list<Component *> components;
+    Scene *m_pScene;
+
+    std::mutex m_components_mutex;
+    std::list<Component *> m_components;
 
    public:
+
+    Context *getContext();
+
+    void addComponent(Component *component);
+
+    void destroy();
+
     void lockTextureMutex() {m_texture_mutex.lock();};
     sf::Texture *getTexture();
     void unlockTextureMutex() {m_texture_mutex.unlock();};

@@ -5,8 +5,8 @@
 #include <memory>
 
 #include "include/BS_thread_pool.hpp"
-#include "Context.h"
 
+class Context;
 class Window;
 
 class Game {
@@ -32,7 +32,7 @@ class Game {
     BS::thread_pool m_eventsUpdateThreadPool{1};
 
     bool m_running;
-    Context m_gameContext{};
+    Context *m_gameContext;
 };
 
 #endif  // PONG_GAME_H

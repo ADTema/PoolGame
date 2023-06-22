@@ -4,3 +4,6 @@
 void Context::setWindowsData(Context::WindowData win_data) {
     m_mainWidowData = std::move(win_data);
 }
+void Context::stopGame() {
+    m_running = false;
+}

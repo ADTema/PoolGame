@@ -6,9 +6,11 @@
 #include "../headers/Log.h"
 #include "../headers/Scene.h"
 #include "../headers/utils.h"
+#include "../headers/Context.h"
+#include "../headers/Camera.h"
 
 Window::Window(std::string title, const unsigned int width,
-               const unsigned int height, Context &context): m_gameContext(context) {
+               const unsigned int height, Context *context): m_gameContext(context) {
     m_data = {std::move(title), width, height};
     LOG_INFO("Creating window \"{0}\" with size {1}x{2}...", m_data.title,
              m_data.width, m_data.height);
@@ -19,7 +21,7 @@ Window::Window(std::string title, const unsigned int width,
 
 Window::~Window() { shutdown(); }
 void Window::on_update() {
-    LOG_INFO("Update window \"{0}\"", m_data.title);
+    //LOG_INFO("Update window \"{0}\"", m_data.title);
     m_viewMatrix = m_pCurrentScene->getCamera()->getViewMatrix();
     {
         std::unique_lock<std::mutex> lock(m_pWindow_mutex);
@@ -91,3 +93,7 @@ void Window::renderObject(GameObject *gameObject) {
 }
 void Window::setCurrentScene(Scene *scene) { m_pCurrentScene = scene; }
 void Window::on_updateScene() { m_pCurrentScene->on_update(); }
+void Window::on_updateEvents() {
+    std::unique_lock<std::mutex> lock(m_pWindow_mutex);
+    m_pWindow->pollEvent(m_gameContext->getEvent());
+}

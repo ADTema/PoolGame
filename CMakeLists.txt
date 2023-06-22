@@ -11,7 +11,9 @@ set(PONG_SOURCES
         src/Camera.cpp
         src/Game.cpp
         src/GameObject.cpp
-        src/Context.cpp)
+        src/Context.cpp
+        game/ExitGameScript.cpp
+        game/PlayerScript.cpp)
 set(PONG_HEADERS
         headers/Window.h
         headers/Log.h
@@ -21,7 +23,9 @@ set(PONG_HEADERS
         headers/Scene.h
         headers/utils.h
         headers/Camera.h
-        headers/Context.h)
+        headers/Context.h
+        game/ExitGameScript.h
+        game/PlayerScript.h)
 
 add_executable(pong ${PONG_SOURCES} ${PONG_HEADERS})
 
