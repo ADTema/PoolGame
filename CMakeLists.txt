@@ -7,13 +7,15 @@ set(PONG_SOURCES
         src/Window.cpp
         src/utils.cpp
         src/Scene.cpp
-        src/Component.cpp
         src/Camera.cpp
         src/Game.cpp
         src/GameObject.cpp
         src/Context.cpp
         game/ExitGameScript.cpp
-        game/PlayerScript.cpp)
+        game/PlayerScript.cpp
+        game/CameraScript.cpp
+        game/prefabs/Rectangle.cpp
+        game/prefabs/PowerRow.cpp)
 set(PONG_HEADERS
         headers/Window.h
         headers/Log.h
@@ -25,7 +27,10 @@ set(PONG_HEADERS
         headers/Camera.h
         headers/Context.h
         game/ExitGameScript.h
-        game/PlayerScript.h)
+        game/PlayerScript.h
+        game/CameraScript.h
+        game/prefabs/Rectangle.h
+        game/prefabs/PowerRow.h)
 
 add_executable(pong ${PONG_SOURCES} ${PONG_HEADERS})
 

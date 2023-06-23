@@ -6,19 +6,18 @@
 #include <list>
 #include <mutex>
 
+#include "Window.h"
+
 class Context;
 class Camera;
 class GameObject;
 
 class Scene {
+    friend void Window::on_update();
    public:
     Scene(float width, float height, Context *context);
 
-    std::list<GameObject *>::iterator getGameObjectBeginIterator();
-    std::list<GameObject *>::iterator getGameObjectEndIterator();
-
     void addObject(GameObject *gameObject);
-    Camera *getCamera();
 
     void on_update();
 
@@ -31,7 +30,7 @@ class Scene {
     std::list<GameObject *> m_gameObjects;
     Camera *m_pCamera;
 
-    Context *m_gameContext;
+    Context *m_pGameContext;
 };
 
 #endif  // PONG_SCENE_H

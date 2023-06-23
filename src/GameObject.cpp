@@ -25,6 +25,7 @@ void GameObject::start() {
 }
 
 void GameObject::update() {
+    if(!active) return;
     std::unique_lock<std::mutex> lock(m_components_mutex);
     std::for_each(m_components.begin(), m_components.end(), [](Component *component){
         component->update();
@@ -32,6 +33,7 @@ void GameObject::update() {
 }
 
 void GameObject::fixedUpdate() {
+    if(!active) return;
     std::unique_lock<std::mutex> lock(m_components_mutex);
     std::for_each(m_components.begin(), m_components.end(), [](Component *component){
         component->fixedUpdate();
@@ -61,7 +63,7 @@ void GameObject::addComponent(Component *component) {
     m_components.push_back(component);
 }
 
-void GameObject::setTexture(std::string filename) {
+[[maybe_unused]] void GameObject::setTexture(std::string filename) {
     auto *texture = new sf::Texture();
     if (texture->loadFromFile(filename)) {
         m_texture_mutex.lock();
@@ -80,7 +82,7 @@ void GameObject::setPosition(glm::vec3 position) {
     m_transform[3][2] = position.z;
     m_position = position;
 }
-void GameObject::setRotation(glm::vec3 rotation) {
+[[maybe_unused]] void GameObject::setRotation(glm::vec3 rotation) {
     std::unique_lock<std::mutex> lock(m_transform_mutex);
     m_transform = glm::rotate(m_transform, glm::radians(rotation.x),
                               glm::vec3(1.0f, 0.0f, 0.0f));
@@ -90,7 +92,7 @@ void GameObject::setRotation(glm::vec3 rotation) {
                               glm::vec3(0.0f, 0.0f, 1.0f));
     m_rotation = rotation;
 }
-void GameObject::setScale(glm::vec3 scale) {
+[[maybe_unused]] void GameObject::setScale(glm::vec3 scale) {
     std::unique_lock<std::mutex> lock(m_transform_mutex);
     m_transform = glm::scale(m_transform, scale);
     m_scale = scale;
@@ -99,15 +101,15 @@ glm::vec3 GameObject::getPosition() {
     std::unique_lock<std::mutex> lock(m_transform_mutex);
     return m_position;
 }
-glm::vec3 GameObject::getRotation() {
+[[maybe_unused]] glm::vec3 GameObject::getRotation() {
     std::unique_lock<std::mutex> lock(m_transform_mutex);
     return m_rotation;
 }
-glm::vec3 GameObject::getScale() {
+[[maybe_unused]] glm::vec3 GameObject::getScale() {
     std::unique_lock<std::mutex> lock(m_transform_mutex);
     return m_scale;
 }
-void GameObject::setTransform(glm::mat4 transform) {
+[[maybe_unused]] void GameObject::setTransform(glm::mat4 transform) {
     std::unique_lock<std::mutex> lock(m_transform_mutex);
     m_transform = transform;
     glm::quat rotation;
