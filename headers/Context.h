@@ -51,6 +51,8 @@ class Context {
 
     void setCamera(Camera *camera);
 
+    bool horizontalCollision();
+
    public:
 
     Context() = default;

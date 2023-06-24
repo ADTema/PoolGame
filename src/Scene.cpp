@@ -5,6 +5,8 @@
 #include "../game/CameraScript.h"
 #include "../game/ExitGameScript.h"
 #include "../game/PlayerScript.h"
+#include "../game/prefabs/Ball.h"
+#include "../game/prefabs/Collision.h"
 #include "../game/prefabs/Rectangle.h"
 #include "../headers/Camera.h"
 #include "../headers/Context.h"
@@ -35,21 +37,41 @@ Scene::Scene(float width, float height, Context *context)
     m_pCamera->addComponent(new CameraScript());
     addObject(m_pCamera);
 
-    auto gm = new GameObject();
-    gm->addComponent(new PlayerScript());
-    addObject(gm);
+    auto collision = new Collision();
 
-    auto obj1 = new Rectangle(glm::vec3(10, 10, 1), glm::vec2(128, 128),
+    auto mainBall = new Ball(1,  glm::vec3(1,1,1));
+    mainBall->addComponent(new PlayerScript());
+    addObject(mainBall);
+    collision->addBall(mainBall);
+
+    auto ball1 = new Ball(1,  glm::vec3(100,100,1));
+    addObject(ball1);
+    collision->addBall(ball1);
+
+    auto ball2 = new Ball(1,  glm::vec3(150,150,1));
+    addObject(ball2);
+    collision->addBall(ball2);
+
+    auto wallTop = new Rectangle(glm::vec3(0, 250, 1), glm::vec2(1000, 20),
                               sf::Color::Green);
-    addObject(obj1);
+    addObject(wallTop);
+    collision->addWall(wallTop);
 
-    auto obj2 = new Rectangle(glm::vec3(400, 400, 1), glm::vec2(50, 50),
-                              sf::Color::Blue);
-    addObject(obj2);
+    auto wallDown = new Rectangle(glm::vec3(0, -250, 1), glm::vec2(1000, 20),
+                              sf::Color::Green);
+    addObject(wallDown);
+    collision->addWall(wallDown);
 
-    auto obj3 = new Rectangle(glm::vec3(10, 400, 0), glm::vec2(10, 10),
-                              sf::Color::White);
-    addObject(obj3);
+    auto wallRight = new Rectangle(glm::vec3(500, 0, 1), glm::vec2(20, 500),
+                              sf::Color::Green);
+    addObject(wallRight);
+    collision->addWall(wallRight);
+
+    auto wallLeft = new Rectangle(glm::vec3(-500, 0, 1), glm::vec2(20, 500),
+                              sf::Color::Green);
+    addObject(wallLeft);
+    collision->addWall(wallLeft);
+
     auto obj4 = new GameObject();
     obj4->setTexture(
         "/home/adtema/CLionProjects/Pong/"
@@ -57,6 +79,8 @@ Scene::Scene(float width, float height, Context *context)
         "foto-104.jpg");
     obj4->setPosition({0, 0, -50});
     addObject(obj4);
+
+    addObject(collision);
 }
 void Scene::on_update() {
     std::unique_lock<std::mutex> lock(m_gameObjects_mutex);

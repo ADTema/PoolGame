@@ -17,6 +17,7 @@ class PlayerScript: public Component  {
 
     bool leftMousePressed = false;
 
+    float radius = 0;
     float friction = .1f;
     float force = 0;
 

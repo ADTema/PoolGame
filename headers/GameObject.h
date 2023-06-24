@@ -68,9 +68,9 @@ class GameObject {
 
     glm::mat4 getTransform();
     [[maybe_unused]] void setTransform(glm::mat4 transform);
-    void start();
-    void update();
-    void fixedUpdate();
+    virtual void start();
+    virtual void update();
+    virtual void fixedUpdate();
 };
 
 #endif  // PONG_GAMEOBJECT_H
