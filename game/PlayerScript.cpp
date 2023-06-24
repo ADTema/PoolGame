@@ -5,6 +5,8 @@
 #include "../headers/Log.h"
 #include "SFML/Graphics.hpp"
 #include "glm/gtx/compatibility.hpp"
+#include <glm/gtx/vector_angle.hpp>
+
 #include "prefabs/Ball.h"
 
 void PlayerScript::start() {
@@ -27,16 +29,19 @@ void PlayerScript::fixedUpdate() {
             leftMousePressed = true;
             oldMousePos = context->getMousePosition();
         }
+        mousePos = context->getMousePosition();
+        auto normal = glm::normalize(oldMousePos - mousePos) * glm::vec2(1, -1);
+
+        powerRow->setPosition(gameObject->getPosition() + glm::vec3(normal * powerRow->m_size.x/2.f,0));
+        powerRow->setRotation({0,0, glm::degrees(abs(glm::angle(normal, glm::vec2(1,0)))) * -abs(normal.y)/normal.y});
     }
     if(!context->isMouseKeyPressed(sf::Mouse::Button::Left)){
         if(leftMousePressed){
             powerRow->active = false;
             leftMousePressed = false;
-            mousePos = context->getMousePosition();
-            reinterpret_cast<Ball *>(this->gameObject)->velocity = glm::normalize(oldMousePos - mousePos) * glm::vec2(1, -1);
-            reinterpret_cast<Ball *>(this->gameObject)->force = glm::length(oldMousePos - mousePos);
 
-            LOG_INFO("Velocity : ({0},{1})\tForce : {2}", reinterpret_cast<Ball *>(this->gameObject)->velocity.x,reinterpret_cast<Ball *>(this->gameObject)->velocity.y,reinterpret_cast<Ball *>(this->gameObject)->force );
+            auto vel = (oldMousePos - mousePos) * glm::vec2(1, -1) /10.f;
+            reinterpret_cast<Ball *>(this->gameObject)->m_body->ApplyForceToCenter({vel.x,vel.y}, true);
         }
     }
 

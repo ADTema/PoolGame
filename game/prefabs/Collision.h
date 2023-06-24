@@ -6,19 +6,23 @@
 #include "../../headers/GameObject.h"
 #include "Ball.h"
 #include "Rectangle.h"
+#include "Hole.h"
+#include "box2d/box2d.h"
 
 class Collision: public GameObject {
    public:
-    std::pair<bool, glm::vec3> checkCollision( Ball* ball1,  Ball* ball2);
-    static std::pair<bool, glm::vec3> checkCollision( Ball* ball,  Rectangle* wall);
-
     void fixedUpdate() override;
     void addBall(Ball * ball);
     void addWall(Rectangle * wall);
+    void addHole(Hole * hole);
 
 
     std::list<Ball *> m_balls;
     std::list<Rectangle *> m_walls;
+    std::list<Hole *> m_hols;
+
+    b2World world{{0,0}};
+
 
 };
 

@@ -82,16 +82,19 @@ void GameObject::setPosition(glm::vec3 position) {
     m_transform[3][2] = position.z;
     m_position = position;
 }
-[[maybe_unused]] void GameObject::setRotation(glm::vec3 rotation) {
+void GameObject::setRotation(glm::vec3 rotation) {
     std::unique_lock<std::mutex> lock(m_transform_mutex);
-    m_transform = glm::rotate(m_transform, glm::radians(rotation.x),
-                              glm::vec3(1.0f, 0.0f, 0.0f));
-    m_transform = glm::rotate(m_transform, glm::radians(rotation.y),
-                              glm::vec3(0.0f, 1.0f, 0.0f));
-    m_transform = glm::rotate(m_transform, glm::radians(rotation.z),
-                              glm::vec3(0.0f, 0.0f, 1.0f));
+    glm::mat4 rotationMatrix(1.0f);
+    rotationMatrix = glm::rotate(rotationMatrix, glm::radians(rotation.x),
+                                 glm::vec3(1.0f, 0.0f, 0.0f));
+    rotationMatrix = glm::rotate(rotationMatrix, glm::radians(rotation.y),
+                                 glm::vec3(0.0f, 1.0f, 0.0f));
+    rotationMatrix = glm::rotate(rotationMatrix, glm::radians(rotation.z),
+                                 glm::vec3(0.0f, 0.0f, 1.0f));
     m_rotation = rotation;
+    m_transform = glm::translate(glm::mat4(1), m_position) * rotationMatrix * glm::scale(glm::mat4(1), m_scale);
 }
+
 [[maybe_unused]] void GameObject::setScale(glm::vec3 scale) {
     std::unique_lock<std::mutex> lock(m_transform_mutex);
     m_transform = glm::scale(m_transform, scale);

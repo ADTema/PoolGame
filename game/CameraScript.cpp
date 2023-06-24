@@ -8,10 +8,13 @@
 void CameraScript::start() {}
 void CameraScript::update() {}
 void CameraScript::fixedUpdate() {
+
+
     float moveSpeed = 10.0f;
     float smooth = 0.05f;
 
     glm::vec3 oldPosition = gameObject->getPosition();
+
 
     auto context = this->gameObject->getContext();
 

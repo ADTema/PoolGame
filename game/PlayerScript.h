@@ -17,13 +17,8 @@ class PlayerScript: public Component  {
 
     bool leftMousePressed = false;
 
-    float radius = 0;
-    float friction = .1f;
-    float force = 0;
-
     PowerRow *powerRow = nullptr;
 
-    glm::vec2 velocity{0 ,0};
     glm::vec2 mousePos;
     glm::vec2 oldMousePos;
 

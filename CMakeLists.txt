@@ -30,7 +30,7 @@ set(PONG_HEADERS
         game/PlayerScript.h
         game/CameraScript.h
         game/prefabs/Rectangle.h
-        game/prefabs/PowerRow.h game/prefabs/Collision.cpp game/prefabs/Collision.h game/Hole.cpp game/Hole.h game/prefabs/Ball.cpp game/prefabs/Ball.h)
+        game/prefabs/PowerRow.h game/prefabs/Collision.cpp game/prefabs/Collision.h game/prefabs/Hole.cpp game/prefabs/Hole.h game/prefabs/Ball.cpp game/prefabs/Ball.h)
 
 add_executable(pong ${PONG_SOURCES} ${PONG_HEADERS})
 
@@ -55,3 +55,8 @@ add_library(thread_pool externals/thread_pool/include/BS_thread_pool.hpp externa
 set_target_properties(thread_pool PROPERTIES LINKER_LANGUAGE CXX)
 target_include_directories(pong PRIVATE externals/thread_pool)
 target_link_libraries(pong PRIVATE thread_pool)
+
+#box_2d_lite
+add_subdirectory(externals/box_2d)
+target_include_directories(pong PRIVATE externals/box_2d)
+target_link_libraries(pong PRIVATE box2d)

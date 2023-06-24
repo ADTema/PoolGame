@@ -4,6 +4,8 @@
 #include "../headers/Log.h"
 #include "../headers/Scene.h"
 
+
+
 Game::Game() : m_pGameContext(new Context()) {
     m_pWindow = std::make_unique<Window>("Pong", 1280, 720, m_pGameContext);
     m_pWindow->setCurrentScene(new Scene(1280, 720, m_pGameContext));

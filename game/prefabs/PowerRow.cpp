@@ -8,14 +8,14 @@
 PowerRow::PowerRow() {
 
     LOG_INFO("PowerRow");
-    sf::RectangleShape rectangle(sf::Vector2f(30, 3));
+    sf::RectangleShape rectangle(sf::Vector2f(m_size.x, m_size.y));
     sf::RenderTexture texture;
     rectangle.setFillColor(sf::Color::White);
-    texture.create({30, 3});
+    texture.create({static_cast<unsigned >(m_size.x), static_cast<unsigned >(m_size.y)});
     texture.clear();
     texture.draw(rectangle);
     texture.display();
     auto *nt = new sf::Texture(texture.getTexture());
     setTexture(nt);
-    setPosition({0,0,2});
+    setPosition({0,0,0});
 }
