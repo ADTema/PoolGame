@@ -44,7 +44,7 @@ class GameObject {
 
     ~GameObject();
 
-    Context *getContext();
+    Context *getContext() const;
 
     void addComponent(Component *component);
 

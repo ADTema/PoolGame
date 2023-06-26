@@ -6,9 +6,10 @@
 class Hole: public GameObject{
    public:
     enum {
-        RADIUS = 30,
+        RADIUS = 20,
     };
-    Hole(glm::vec3 position);
+    Hole(glm::vec3 position, char bonus);
+
 
     char bonus = 1;
 };

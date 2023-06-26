@@ -19,8 +19,8 @@ class Ball: public GameObject{
 
     sf::Color colors[16] = {sf::Color::White, sf::Color::Yellow, sf::Color::Blue,
                             sf::Color::Red, {255, 0, 183}, {255, 153, 0},
-                            sf::Color::Yellow, {87, 53, 2}, sf::Color::Black,
-                        sf::Color::Green, sf::Color::Blue, sf::Color::Red,
+                            sf::Color::Green, {87, 53, 2}, {41, 41, 41},
+                        sf::Color::Yellow, sf::Color::Blue, sf::Color::Red,
                             {255, 0, 183}, {255, 153, 0}, sf::Color::Green, {87, 53, 2}};
 
     b2Body* m_body;

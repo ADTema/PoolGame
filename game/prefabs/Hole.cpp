@@ -3,8 +3,8 @@
 #include "SFML/Graphics/CircleShape.hpp"
 #include "SFML/Graphics/RenderTexture.hpp"
 
-Hole::Hole(glm::vec3 position) {
-
+Hole::Hole(glm::vec3 position, char bonus) {
+    this->bonus = bonus;
     sf::CircleShape circle(RADIUS);
     sf::RenderTexture texture;
     circle.setOrigin({0,0});

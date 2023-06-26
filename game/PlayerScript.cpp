@@ -14,6 +14,7 @@ void PlayerScript::start() {
     powerRow = new PowerRow();
 
     powerRow->active = false;
+
     gameObject->m_pScene->addObject(powerRow);
 }
 void PlayerScript::update() {
@@ -23,6 +24,9 @@ void PlayerScript::fixedUpdate() {
 
     auto context = this->gameObject->getContext();
 
+    if(powerRow == nullptr){
+        powerRow = new PowerRow();
+    }
     if(context->isMouseKeyPressed(sf::Mouse::Button::Left)){
         if(!leftMousePressed){
             powerRow->active = true;
@@ -32,7 +36,7 @@ void PlayerScript::fixedUpdate() {
         mousePos = context->getMousePosition();
         auto normal = glm::normalize(oldMousePos - mousePos) * glm::vec2(1, -1);
 
-        powerRow->setPosition(gameObject->getPosition() + glm::vec3(normal * powerRow->m_size.x/2.f,0));
+        powerRow->setPosition(gameObject->getPosition() + glm::vec3(normal * powerRow->m_size.x/2.f,4));
         powerRow->setRotation({0,0, glm::degrees(abs(glm::angle(normal, glm::vec2(1,0)))) * -abs(normal.y)/normal.y});
     }
     if(!context->isMouseKeyPressed(sf::Mouse::Button::Left)){
