@@ -12,7 +12,7 @@ class Rectangle:public GameObject {
 
     glm::vec2 m_size;
 
-    b2Body* m_body;
+    b2Body* m_body{};
 };
 
 #endif  // PONG_RECTANGLE_H

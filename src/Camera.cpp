@@ -1,6 +1,5 @@
 #include "../headers/Camera.h"
 
-#include "glm/mat4x4.hpp"
 
 glm::mat4 Camera::getViewMatrix() {
     return glm::inverse(getTransform() - glm::mat4(

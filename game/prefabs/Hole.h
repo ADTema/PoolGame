@@ -3,6 +3,8 @@
 
 #include "../../headers/GameObject.h"
 
+#include "SFML/Graphics/Font.hpp"
+
 class Hole: public GameObject{
    public:
     enum {
@@ -10,8 +12,11 @@ class Hole: public GameObject{
     };
     Hole(glm::vec3 position, char bonus);
 
+    void fixedUpdate() override;
 
     char bonus = 1;
+
+    sf::Font font;
 };
 
 

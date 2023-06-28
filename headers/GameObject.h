@@ -44,7 +44,7 @@ class GameObject {
 
     ~GameObject();
 
-    Context *getContext() const;
+    [[nodiscard]] Context *getContext() const;
 
     void addComponent(Component *component);
 

@@ -1,9 +1,18 @@
 #include "Collision.h"
-#include <math.h>
 
-#include "../../headers/GameObject.h"
-#include "glm/gtx/norm.hpp"
+#include <cmath>
+
+
 #define SCALE 30
+
+void Collision::start() {
+    GameObject::start();
+
+    tScore = new Score(0);
+    tScore->setScore(0);
+    tScore->setPosition({0, 320, 10});
+    this->m_pScene->addObject(tScore);
+}
 
 void Collision::addBall(Ball* ball) {
     m_balls.push_back(ball);
@@ -24,7 +33,7 @@ void Collision::addBall(Ball* ball) {
 
     b2Body* body = world.CreateBody(bodyDef);
     body->CreateFixture(fixDef);
-    body->SetLinearDamping(0.6f);
+    body->SetLinearDamping(0.75f);
     ball->m_body = body;
 }
 void Collision::addHole(Hole* hole) { m_hols.push_back((hole)); }
@@ -39,7 +48,7 @@ void Collision::addWall(Rectangle* wall) {
     bodyDef->type = b2_staticBody;
     bodyDef->position.Set(pos.x / SCALE, pos.y / SCALE);
 
-    bodyDef->angle = -wall->getRotation().z*(static_cast<float>(M_PI)/180);
+    bodyDef->angle = -wall->getRotation().z * (static_cast<float>(M_PI) / 180);
 
     auto fixDef = new b2FixtureDef();
     fixDef->shape = box;
@@ -52,22 +61,35 @@ void Collision::addWall(Rectangle* wall) {
     wall->m_body = body;
 }
 void Collision::fixedUpdate() {
-
     GameObject::fixedUpdate();
-    world.Step(0.02f, 10, 5);
+    world.Step(0.02f, 10, 10);
+    if (m_balls.size() >= 2) {
+        for (auto& m_hole : m_hols) {
+            for (auto & m_ball : m_balls) {
+                if (m_ball) {
+                    if (glm::distance(m_hole->getPosition(),
+                                      m_ball->getPosition()) <
+                        (Hole::RADIUS)) {
+                        if (m_ball->number != 0 && m_ball->number != 8) {
+                            score += m_hole->bonus * m_ball->number;
 
-    for (auto& m_hol : m_hols) {
-        for (auto IBall = m_balls.begin(); IBall != m_balls.end(); IBall++) {
-            if ((*IBall)) {
-                if (glm::distance(m_hol->getPosition(),
-                                  (*IBall)->getPosition()) < (Hole::RADIUS)) {
-                    if ((*IBall)->number != 0 && (*IBall)->number != 8) {
-                        world.DestroyBody((*IBall)->m_body);
-                        (*IBall)->destroy();
-                        IBall = m_balls.erase(IBall);
+                            m_ball->m_body->SetLinearVelocity(b2Vec2(0, 0));
+                            m_ball->setPosition(glm::vec3(0, 320, 0));
+                            m_ball->m_body->SetTransform({0, 320}, 0);
+                        } else if (m_ball->number == 0) {
+                            m_ball->setPosition(glm::vec3(0, 0, 5));
+                            m_ball->m_body->SetTransform({0, 0}, 0);
+                            m_ball->m_body->SetLinearVelocity(b2Vec2(0, 0));
+                            score -= score/4;
+                        } else if (m_ball->number == 8) {
+
+                        }
+                        tScore->setScore(score);
                     }
                 }
             }
         }
+    }else{
+
     }
 }

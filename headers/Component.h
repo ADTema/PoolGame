@@ -8,7 +8,7 @@ class Component {
     virtual void start() = 0;
     virtual void update() = 0;
     virtual void fixedUpdate() = 0;
-    GameObject *gameObject;
+    GameObject *gameObject{};
 };
 
 #endif  // PONG_COMPONENT_H

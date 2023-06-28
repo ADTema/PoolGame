@@ -30,7 +30,7 @@ set(PONG_HEADERS
         game/PlayerScript.h
         game/CameraScript.h
         game/prefabs/Rectangle.h
-        game/prefabs/PowerRow.h game/prefabs/Collision.cpp game/prefabs/Collision.h game/prefabs/Hole.cpp game/prefabs/Hole.h game/prefabs/Ball.cpp game/prefabs/Ball.h)
+        game/prefabs/PowerRow.h game/prefabs/Collision.cpp game/prefabs/Collision.h game/prefabs/Hole.cpp game/prefabs/Hole.h game/prefabs/Ball.cpp game/prefabs/Ball.h src/templates/Button.cpp headers/templates/Button.h src/templates/Text.cpp headers/templates/Text.h game/prefabs/Score.cpp game/prefabs/Score.h)
 
 add_executable(pong ${PONG_SOURCES} ${PONG_HEADERS})
 

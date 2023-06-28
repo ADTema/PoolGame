@@ -23,7 +23,7 @@ class Ball: public GameObject{
                         sf::Color::Yellow, sf::Color::Blue, sf::Color::Red,
                             {255, 0, 183}, {255, 153, 0}, sf::Color::Green, {87, 53, 2}};
 
-    b2Body* m_body;
+    b2Body* m_body{};
 };
 
 #endif  // PONG_BALL_H

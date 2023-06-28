@@ -7,12 +7,11 @@
 #include "../game/PlayerScript.h"
 #include "../game/prefabs/Ball.h"
 #include "../game/prefabs/Collision.h"
-#include "../game/prefabs/Hole.h"
 #include "../headers/Camera.h"
 #include "../headers/Context.h"
 #include "../headers/Log.h"
 #include "SFML/Graphics/CircleShape.hpp"
-#include "SFML/Graphics/RenderTexture.hpp"
+#include "../../headers/utils.h"
 
 bool sortGM(GameObject *f, GameObject *s) {
     return f->getPosition().z < s->getPosition().z;
@@ -37,24 +36,26 @@ Scene::Scene(float width, float height, Context *context)
     m_pCamera->addComponent(new ExitGameScript());
     addObject(m_pCamera);
 
+
+
     auto collision = new Collision();
 
-    auto hole1 = new Hole(glm::vec3(0,250,2), 5);
+    auto hole1 = new Hole(glm::vec3(0,250,2), 1);
     addObject(hole1);
     collision->addHole(hole1);
-    auto hole2 = new Hole(glm::vec3(490,240,2), 5);
+    auto hole2 = new Hole(glm::vec3(490,240,2), 2);
     addObject(hole2);
     collision->addHole(hole2);
-    auto hole3 = new Hole(glm::vec3(490,-240,2), 5);
+    auto hole3 = new Hole(glm::vec3(490,-240,2), 3);
     addObject(hole3);
     collision->addHole(hole3);
-    auto hole4 = new Hole(glm::vec3(0,-250,2), 5);
+    auto hole4 = new Hole(glm::vec3(0,-250,2), 4);
     addObject(hole4);
     collision->addHole(hole4);
     auto hole5 = new Hole(glm::vec3(-490,-240,2), 5);
     addObject(hole5);
     collision->addHole(hole5);
-    auto hole6 = new Hole(glm::vec3(-490,240,2), 5);
+    auto hole6 = new Hole(glm::vec3(-490,240,2), 6);
     addObject(hole6);
     collision->addHole(hole6);
 
@@ -254,14 +255,14 @@ Scene::Scene(float width, float height, Context *context)
 
 
 
-    auto obj4 = new GameObject();
+    /*auto obj4 = new GameObject();
     obj4->setTexture(
         "/home/adtema/CLionProjects/Pong/"
         "1674270773_catherineasquithgallery-com-p-serii-fon-tekstura-bumagi-"
         "foto-104.jpg");
     obj4->setPosition({0, 0, -50});
     addObject(obj4);
-
+*/
     addObject(collision);
 }
 void Scene::on_update() {

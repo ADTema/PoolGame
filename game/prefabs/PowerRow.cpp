@@ -11,11 +11,13 @@ PowerRow::PowerRow() {
     sf::RectangleShape rectangle(sf::Vector2f(m_size.x, m_size.y));
     sf::RenderTexture texture;
     rectangle.setFillColor(sf::Color::White);
-    texture.create({static_cast<unsigned >(m_size.x), static_cast<unsigned >(m_size.y)});
+    if(!texture.create({static_cast<unsigned >(m_size.x), static_cast<unsigned >(m_size.y)})){
+        LOG_ERROR("Texture on power row not created");
+    }
     texture.clear();
     texture.draw(rectangle);
     texture.display();
     auto *nt = new sf::Texture(texture.getTexture());
     setTexture(nt);
-    setPosition({0,0,0});
+    setPosition({0,0,4});
 }
