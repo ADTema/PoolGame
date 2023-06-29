@@ -527,13 +527,15 @@ void Scene::outJson(std::ifstream& infile) {
             LOG_INFO("number");
             LOG_INFO(number);
             if (typeid(*m_object) == typeid(Ball)) {
+                LOG_INFO("Typeid");
                 if (dynamic_cast<Ball*>(m_object)->number == int(obj[0]["number"])) {
                     LOG_INFO("123123123");
-                    auto position = obj[1]["position"];
+                    auto position = obj[0]["position"];
                     dynamic_cast<Ball*>(m_object)->m_body->SetTransform(
                         {float(position[0])/SCALE, float(position[1])/SCALE}, 0);
                     dynamic_cast<Ball*>(m_object)->setPosition(
                         {position[0], position[1], position[2]});
+                    dynamic_cast<Ball*>(m_object)->m_body->SetLinearVelocity({0,0});
                 }
             }
         }
@@ -555,4 +557,9 @@ void Scene::save(std::string name) {
         toJson(infile);
         infile.close();
     }
+}
+void Scene::openFile(std::string name) {
+    std::string filePath = "../info.txt";
+    std::string command = "/opt/kde3/bin/kate " + filePath;
+    std::system(command.c_str());
 }

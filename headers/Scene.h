@@ -34,6 +34,8 @@ class Scene {
 
     void destroyGameObjects();
 
+    void openFile(std::string name);
+
     void file(std::string name);
 
     void save(std::string name);
