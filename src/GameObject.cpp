@@ -101,7 +101,7 @@ void GameObject::setRotation(glm::vec3 rotation) {
 
 [[maybe_unused]] void GameObject::setScale(glm::vec3 scale) {
     std::unique_lock<std::mutex> lock(m_transform_mutex);
-    m_transform = glm::scale(m_transform, scale);
+    m_transform = glm::scale(m_transform, (1.f/m_scale) * scale);
     m_scale = scale;
 }
 glm::vec3 GameObject::getPosition() {

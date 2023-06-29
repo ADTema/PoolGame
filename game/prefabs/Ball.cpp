@@ -9,6 +9,9 @@
 #define SCALE 30
 
 Ball::Ball(char number, glm::vec3 position) : number(number) {
+
+    startPos = position;
+
     auto *font = new sf::Font();
     if(!font->loadFromFile("/home/adtema/CLionProjects/Pong/Arial/arialmt.ttf")){
         LOG_ERROR("Font on ball not load");

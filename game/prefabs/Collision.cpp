@@ -63,9 +63,10 @@ void Collision::addWall(Rectangle* wall) {
 void Collision::fixedUpdate() {
     GameObject::fixedUpdate();
     world.Step(0.02f, 10, 10);
-    if (m_balls.size() >= 2) {
+
+
         for (auto& m_hole : m_hols) {
-            for (auto & m_ball : m_balls) {
+            for (auto m_ball : m_balls) {
                 if (m_ball) {
                     if (glm::distance(m_hole->getPosition(),
                                       m_ball->getPosition()) <
@@ -74,22 +75,24 @@ void Collision::fixedUpdate() {
                             score += m_hole->bonus * m_ball->number;
 
                             m_ball->m_body->SetLinearVelocity(b2Vec2(0, 0));
-                            m_ball->setPosition(glm::vec3(0, 320, 0));
-                            m_ball->m_body->SetTransform({0, 320}, 0);
+                            m_ball->setPosition(glm::vec3(-550 + 20*m_ball->number, -320, 0));
+                            m_ball->m_body->SetTransform({(-500.f + 20*m_ball->number)/SCALE, -320.f/SCALE}, 0);
+                            tScore->setScore(score);
+                            break;
                         } else if (m_ball->number == 0) {
                             m_ball->setPosition(glm::vec3(0, 0, 5));
                             m_ball->m_body->SetTransform({0, 0}, 0);
                             m_ball->m_body->SetLinearVelocity(b2Vec2(0, 0));
                             score -= score/4;
+                            tScore->setScore(score);
+                            break;
                         } else if (m_ball->number == 8) {
-
+                            m_ball->m_pScene->endGame();
+                            break;
                         }
-                        tScore->setScore(score);
                     }
                 }
             }
         }
-    }else{
-
     }
-}
+

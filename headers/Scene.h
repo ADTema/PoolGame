@@ -23,14 +23,30 @@ class Scene {
 
     Context *getContext();
 
+    void endGame();
+
     void destroyGameObject(GameObject *gameObject);
    private:
+
+    void screensaver();
+
+    void restartTable();
+
     void destroyGameObjects();
-   private:
+
+    void file(std::string name);
+
+    void save(std::string name);
+
+    void toJson(std::ofstream &ofstream);
+    void outJson(std::ifstream &infile);
+
     std::mutex m_gameObjects_mutex;
     std::list<GameObject *> m_gameObjects;
     std::queue<GameObject *> m_toDestroyObjects;
     Camera *m_pCamera;
+
+    std::string m_playerName;
 
     Context *m_pGameContext;
 };

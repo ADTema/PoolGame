@@ -17,6 +17,8 @@ class Ball: public GameObject{
 
     char number;
 
+    glm::vec3 startPos;
+
     sf::Color colors[16] = {sf::Color::White, sf::Color::Yellow, sf::Color::Blue,
                             sf::Color::Red, {255, 0, 183}, {255, 153, 0},
                             sf::Color::Green, {87, 53, 2}, {41, 41, 41},

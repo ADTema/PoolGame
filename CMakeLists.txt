@@ -30,7 +30,7 @@ set(PONG_HEADERS
         game/PlayerScript.h
         game/CameraScript.h
         game/prefabs/Rectangle.h
-        game/prefabs/PowerRow.h game/prefabs/Collision.cpp game/prefabs/Collision.h game/prefabs/Hole.cpp game/prefabs/Hole.h game/prefabs/Ball.cpp game/prefabs/Ball.h src/templates/Button.cpp headers/templates/Button.h src/templates/Text.cpp headers/templates/Text.h game/prefabs/Score.cpp game/prefabs/Score.h)
+        game/prefabs/PowerRow.h game/prefabs/Collision.cpp game/prefabs/Collision.h game/prefabs/Hole.cpp game/prefabs/Hole.h game/prefabs/Ball.cpp game/prefabs/Ball.h src/templates/Button.cpp headers/templates/Button.h src/templates/Text.cpp headers/templates/Text.h game/prefabs/Score.cpp game/prefabs/Score.h game/InputText.cpp game/InputText.h)
 
 add_executable(pong ${PONG_SOURCES} ${PONG_HEADERS})
 
@@ -60,3 +60,8 @@ target_link_libraries(pong PRIVATE thread_pool)
 add_subdirectory(externals/box_2d)
 target_include_directories(pong PRIVATE externals/box_2d)
 target_link_libraries(pong PRIVATE box2d)
+
+#json
+add_subdirectory(externals/json)
+target_include_directories(pong PRIVATE externals/json)
+target_link_libraries(pong PRIVATE nlohmann_json::nlohmann_json)

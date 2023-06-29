@@ -74,6 +74,11 @@ void Text::setText(const std::string& string) {
     m_pText->setCharacterSize(size);
     updateTextTexture();
 }
+
+std::string Text::getString() {
+    return m_pText->getString();
+}
+
 void Text::update() {
     GameObject::update();
     if(m_pText == nullptr){

@@ -24,6 +24,8 @@ class Text: public GameObject{
     [[maybe_unused]] void setFont(const sf::Font& font);
     [[maybe_unused]] void setCharacterSize(unsigned size);
 
+    std::string getString();
+
 
 
    protected:
