@@ -6,8 +6,10 @@
 #include <list>
 #include <mutex>
 
+
 #include "Window.h"
 
+class Score;
 class Context;
 class Camera;
 class GameObject;
@@ -43,10 +45,16 @@ class Scene {
     void toJson(std::ofstream &ofstream);
     void outJson(std::ifstream &infile);
 
+    void saveScores(std::string name, Score *m_score);
+
     std::mutex m_gameObjects_mutex;
     std::list<GameObject *> m_gameObjects;
     std::queue<GameObject *> m_toDestroyObjects;
     Camera *m_pCamera;
+
+    Score *m_score;
+
+    std::list<std::pair<std::string, int>> scores;
 
     std::string m_playerName;
 

@@ -23,9 +23,9 @@ void PlayerScript::fixedUpdate() {
         powerRow = new PowerRow();
     }
     if (reinterpret_cast<Ball *>(this->gameObject)
-            ->m_body->GetLinearVelocity().LengthSquared() <= 0.01f) {
-        reinterpret_cast<Ball *>(this->gameObject)
-            ->m_body->SetLinearVelocity({0,0});
+            ->m_body->GetLinearVelocity().LengthSquared() <= 111111.01f) {
+        /*reinterpret_cast<Ball *>(this->gameObject)
+            ->m_body->SetLinearVelocity({0,0});*/
         if (context->isMouseKeyPressed(sf::Mouse::Button::Left)) {
             if (!leftMousePressed) {
                 powerRow->active = true;

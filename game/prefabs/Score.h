@@ -1,5 +1,7 @@
 #ifndef PONG_SCORE_H
 #define PONG_SCORE_H
+#pragma once
+
 
 #include "../../headers/templates/Text.h"
 class Score: public Text{

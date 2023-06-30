@@ -13,6 +13,7 @@
 #include "../game/prefabs/Ball.h"
 #include "../game/prefabs/Collision.h"
 #include "../headers/Camera.h"
+#include "../game/prefabs/Score.h"
 #include "../headers/Context.h"
 #include "../headers/Log.h"
 #include "../headers/templates/Button.h"
@@ -262,6 +263,13 @@ Scene::Scene(float width, float height, Context* context)
     addObject(collision);
 
     // Menu
+
+
+  auto textName = new Text();
+  textName->setPosition({1450,2300,0});
+  textName->active = false;
+  addObject(textName);
+
     auto down = new Rectangle(glm::vec3(-2000, 2200, 0), glm::vec2(300, 100),
                               {100, 100, 100});
     addObject(down);
@@ -271,11 +279,13 @@ Scene::Scene(float width, float height, Context* context)
     addObject(inputName);
     inputName->active = false;
     inputName->addComponent(
-        new InputText([this, inputName](const std::string& string) {
+        new InputText([textName,this, inputName](const std::string& string) {
             m_playerName = string;
             inputName->active = false;
             m_pCamera->setPosition({2000, -2000, 0});
             file(m_playerName);
+            textName->setText(m_playerName);
+            textName->active = true;
         }));
     addObject(inputName);
 
@@ -348,6 +358,42 @@ Scene::Scene(float width, float height, Context* context)
     });
     addObject(butNewP);
 
+    auto btnInfo = new Button();
+    btnInfo->setBackgroundColor(sf::Color::Magenta);
+    btnInfo->setSize(glm::vec2(300, 100));
+    btnInfo->setText("Справка");
+    btnInfo->setCharacterSize(35);
+    btnInfo->setTextColor(sf::Color::Black);
+    btnInfo->setPosition({1600, 1850, 0});
+    btnInfo->setMouseOverAction([btnInfo] {
+        btnInfo->setScale({1.05f, 1.05f, 1.05f});
+    });
+    btnInfo->setMouseOutAction([btnInfo] {
+        btnInfo->setScale({1.f, 1.f, 1.f});
+    });
+    btnInfo->setMouseClickAction([inputName, this] {
+        openFile("info.txt");
+    });
+    addObject(btnInfo);
+
+    auto btnScore = new Button();
+    btnScore->setBackgroundColor(sf::Color::Magenta);
+    btnScore->setSize(glm::vec2(300, 100));
+    btnScore->setText("Рекорды");
+    btnScore->setCharacterSize(35);
+    btnScore->setTextColor(sf::Color::Black);
+    btnScore->setPosition({2400, 1850, 0});
+    btnScore->setMouseOverAction([btnScore] {
+        btnScore->setScale({1.05f, 1.05f, 1.05f});
+    });
+    btnScore->setMouseOutAction([btnScore] {
+        btnScore->setScale({1.f, 1.f, 1.f});
+    });
+    btnScore->setMouseClickAction([inputName, this] {
+        openFile("scores.txt");
+    });
+    addObject(btnScore);
+
     auto butContinue = new Button();
     butContinue->setBackgroundColor(sf::Color::Magenta);
     butContinue->setSize(glm::vec2(150, 45));
@@ -364,6 +410,7 @@ Scene::Scene(float width, float height, Context* context)
     butContinue->setMouseClickAction([inputName, butContinue, this] {
         m_pCamera->setPosition({-2000, -2200, 0});
         inputName->active = true;
+        restartTable();
     });
     addObject(butContinue);
 
@@ -380,10 +427,11 @@ Scene::Scene(float width, float height, Context* context)
     butEnd->setMouseOutAction([butEnd] { butEnd->setScale({1.f, 1.f, 1.f}); });
     butEnd->setMouseClickAction([butEnd, this] {
         m_pCamera->setPosition({2000, -2000, 0});
-
+        save(m_playerName);
         restartTable();
     });
     addObject(butEnd);
+
 
     screensaver();
 
@@ -437,6 +485,8 @@ void Scene::screensaver() {
             if (m_ball->number == 0) {
                 m_ball->m_body->SetLinearVelocity({-100, 5});
             }
+        }else if (typeid(*m_object) == typeid(Score)){
+            m_score = dynamic_cast<Score*>(m_object);
         }
     }
 }
@@ -483,8 +533,8 @@ void Scene::restartTable() {
 void Scene::file(std::string name) {
     std::ifstream infile(name + ".json");
     if (!infile.good()) {
-        // Файл не существует, создаем его
-        std::ofstream outfile(name + ".json");// //////////////////////////////////////////////////////////
+
+        std::ofstream outfile(name + ".json");
         if (outfile.good()) {
             toJson(outfile);
             outfile.close();
@@ -508,6 +558,8 @@ void Scene::toJson(std::ofstream& ofstream) {
             json.push_back(nlohmann::json::array(
                 {   {   {"number", dynamic_cast<Ball*>(m_object)->number},{"position", arr}    }    }
  ));
+        }else if(typeid(*m_object) == typeid(Score)){
+            json.push_back(nlohmann::json::array({{{"number", 1000},{"score", dynamic_cast<Score*>(m_object)->m_score}}}));
         }
     }
     ofstream << std::setw(4) << json << std::endl;
@@ -519,6 +571,7 @@ void Scene::outJson(std::ifstream& infile) {
 
     nlohmann::json json = nlohmann::json::parse(infile);
     LOG_INFO("In nlohmann::json");
+
 
     for (auto& obj : json) {
         for (auto& m_object : m_gameObjects) {
@@ -537,15 +590,26 @@ void Scene::outJson(std::ifstream& infile) {
                         {position[0], position[1], position[2]});
                     dynamic_cast<Ball*>(m_object)->m_body->SetLinearVelocity({0,0});
                 }
+            }else if(typeid(*m_object) == typeid(Score) && number == 1000){
+                dynamic_cast<Score*>(m_object)->setScore(obj[0]["score"]);
+                m_score =  dynamic_cast<Score*>(m_object);
             }
         }
     }
 }
 void Scene::save(std::string name) {
+    saveScores(name, m_score);
+    std::ofstream ofScores;
+    ofScores.open("/home/adtema/CLionProjects/Pong/scores.txt");
+    for (auto obj :scores){
+        ofScores << obj.first + "\t" + std::to_string(obj.second) + "\n";
+    }
+    ofScores.close();
+
     std::ofstream infile(name + ".json");
     if (!infile.good()) {
-        // Файл не существует, создаем его
-        std::ofstream outfile(name + ".json");// //////////////////////////////////////////////////////////
+
+        std::ofstream outfile(name + ".json");
         if (outfile.good()) {
             toJson(outfile);
             outfile.close();
@@ -559,7 +623,42 @@ void Scene::save(std::string name) {
     }
 }
 void Scene::openFile(std::string name) {
-    std::string filePath = "../info.txt";
-    std::string command = "/opt/kde3/bin/kate " + filePath;
+    std::string filePath = "/home/adtema/CLionProjects/Pong/" + name;
+    std::string command = "kate -b " + filePath;
     std::system(command.c_str());
+}
+void Scene::saveScores(std::string name, Score* m_score) {
+
+    std::ifstream file("/home/adtema/CLionProjects/Pong/scores.txt");
+    if (!file) {
+        std::cerr << "Не удалось открыть файл\n";
+        LOG_ERROR("Не удалось открыть файл");
+    }
+
+    std::string str;
+    int num;
+
+    while (file >> str >> num) {
+        if (str[0] == '#') {
+            scores.push_back(std::make_pair(str, num));
+        }
+    }
+
+    file.close();
+
+    for (const auto &pair : scores) {
+        LOG_INFO(pair.first + "%" + std::to_string(pair.second));
+    }
+
+
+    auto finded = std::find_if(scores.begin(), scores.end(), [name](auto score){
+        return score.first == name; });
+    if(finded != scores.end()){
+        if (finded->second < m_score->m_score){
+            finded->second = m_score->m_score;
+        }
+    }else {
+        scores.push_back({name, m_score->m_score});
+    }
+    scores.sort();
 }
