@@ -43,6 +43,7 @@ class Scene {
     void save(std::string name);
 
     void toJson(std::ofstream &ofstream);
+
     void outJson(std::ifstream &infile);
 
     void saveScores(std::string name, Score *m_score);

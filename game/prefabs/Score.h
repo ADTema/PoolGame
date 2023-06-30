@@ -7,6 +7,7 @@
 class Score: public Text{
    public:
     Score(int score);
+
     void update() override;
     void setScore(int score);
 

@@ -598,6 +598,7 @@ void Scene::outJson(std::ifstream& infile) {
     }
 }
 void Scene::save(std::string name) {
+
     saveScores(name, m_score);
     std::ofstream ofScores;
     ofScores.open("/home/adtema/CLionProjects/Pong/scores.txt");
